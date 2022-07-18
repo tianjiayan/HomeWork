@@ -1,10 +1,17 @@
 <template>
   <button
-    :disabled="disabled"
+    @click="change"
+    :disabled="disabled || loading"
     class="yang-button"
-    :class="[theme, isRound, isBorder, isSize]"
+    :style="[minWidthCss]"
+    :class="[theme, isRound, isBorder, isSize, blockCss]"
   >
-    <slot></slot>
+    <span>
+      <i v-if="loading" class="iconfont icon-prefix icon-loading"></i>
+      <i v-if="prefix" class="iconfont icon-prefix" :class="iconPrefix"></i>
+      <slot></slot>
+      <i v-if="suffix" class="iconfont icon-suffix" :class="iconSuffix"></i>
+    </span>
   </button>
 </template>
 
@@ -16,13 +23,27 @@ export default {
       type: String,
       default: "",
     },
+    minWidth: {
+      type: String,
+      default: "95px",
+    },
     size: {
+      type: String,
+      default: "",
+    },
+    prefix: {
+      type: String,
+      default: "",
+    },
+    suffix: {
       type: String,
       default: "",
     },
     round: Boolean,
     border: Boolean,
     disabled: Boolean,
+    block: Boolean,
+    loading: Boolean,
   },
   computed: {
     theme() {
@@ -36,6 +57,24 @@ export default {
     },
     isSize() {
       return this.size ? `yang-button-${this.size}` : "";
+    },
+    minWidthCss() {
+      if (!this.minWidth) return "";
+      return { "min-width": this.minWidth };
+    },
+    iconPrefix() {
+      return this.prefix ? `icon-${this.prefix}` : "";
+    },
+    iconSuffix() {
+      return this.suffix ? `icon-${this.suffix}` : "";
+    },
+    blockCss() {
+      return this.block ? "yang-button-block" : "";
+    },
+  },
+  methods: {
+    change() {
+      this.$emit("click");
     },
   },
 };
@@ -56,6 +95,20 @@ export default {
 
   + .yang-button {
     margin-left: 14px;
+    margin-bottom: 10px;
+  }
+
+  > span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .icon-prefix {
+    margin-right: 10px;
+  }
+  .icon-suffix {
+    margin-left: 10px;
   }
 }
 .yang-button-medium {
@@ -112,10 +165,28 @@ export default {
   }
 }
 
-/**
- * 圆角
- */
+/*** 圆角 */
 .is-round {
   border-radius: 100px;
+}
+/**块级按钮*/
+.yang-button-block {
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin-bottom: 0;
+}
+/**loading动画加载*/
+.icon-loading {
+  animation: loading 2s infinite linear;
+}
+
+@keyframes loading {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
