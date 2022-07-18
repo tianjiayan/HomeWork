@@ -1,18 +1,17 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <yangButton>默认按钮</yangButton>
+    <yangButton type="primary">成功按钮</yangButton>
+    <yangButton type="danger">危险按钮</yangButton>
+    <yangButton type="warning">警告按钮</yangButton>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
 export default {
-  name: 'HomeView',
+  name: "Home",
   components: {
-    HelloWorld
-  }
-}
+    yangButton: () => import("../components/button/index.vue"),
+  },
+};
 </script>
