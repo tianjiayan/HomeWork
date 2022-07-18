@@ -1,5 +1,9 @@
 <template>
-  <button disabled class="yang-button yang-button-primary is-round">
+  <button
+    :disabled="disabled"
+    class="yang-button"
+    :class="[theme, isRound, isBorder]"
+  >
     <slot></slot>
   </button>
 </template>
@@ -7,6 +11,26 @@
 <script>
 export default {
   name: "index",
+  props: {
+    type: {
+      type: String,
+      default: "",
+    },
+    round: Boolean,
+    border: Boolean,
+    disabled: Boolean,
+  },
+  computed: {
+    theme() {
+      return this.type ? `yang-button-${this.type}` : "";
+    },
+    isRound() {
+      return this.round ? "is-round" : "";
+    },
+    isBorder() {
+      return this.border ? "is-border" : "";
+    },
+  },
 };
 </script>
 
