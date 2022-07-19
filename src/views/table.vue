@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    123
     <tian-table></tian-table>
   </div>
 </template>
