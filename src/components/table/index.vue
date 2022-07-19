@@ -2,6 +2,17 @@
   <div>
     <el-table :data="tableData" style="width: 100%">
       <el-table-column
+        v-if="index"
+        label="序号"
+        type="index"
+        width="55"
+      ></el-table-column>
+      <el-table-colum
+        v-if="checkbox"
+        type="selection"
+        width="55"
+      ></el-table-colum>
+      <el-table-column
         v-for="item in column"
         :key="item.prop"
         :prop="item.prop"
@@ -19,6 +30,8 @@ export default {
       type: Array,
       default: () => [],
     },
+    checkbox: Boolean,
+    index: Boolean,
   },
   data() {
     return {
