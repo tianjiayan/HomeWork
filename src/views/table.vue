@@ -1,34 +1,74 @@
 <template>
   <div class="home">
-    <tian-table :column="column" checkbox index></tian-table>
+    <yang-table
+      init-request
+      :format="formatData"
+      @onLoad="onLoad"
+      :column="column"
+      index
+      checkbox
+      :data="data_1"
+      :params="params_1"
+      url="/name/"
+      method="post"
+    >
+      <template v-slot:operation="slot">
+        <el-button type="primary" @click="handleEdit(slot.data)"
+          >编辑</el-button
+        >
+        <yang-button type="danger" @click="handleDelete(slot.data)"
+          >删除</yang-button
+        >
+      </template>
+    </yang-table>
   </div>
 </template>
 
 <script>
 export default {
-  name: "tableValue",
+  name: "Home",
   data() {
     return {
       column: [
-        {
-          label: "URL地址",
-          type: "function",
-          prop: "data",
-          callback: (data) => {
-            return `<a href="https://www.baidu.com">${data.name}</a>`;
-          },
-        },
-        { label: "日期", prop: "date", width: 500 },
         { label: "姓名", prop: "name" },
-        { label: "地址", prop: "address" },
-        { label: "性别", prop: "sex" },
+        { label: "性别", prop: "gender" },
+        { label: "创建时间", prop: "create_date" },
+        {
+          label: "操作",
+          type: "slot",
+          slot_name: "operation",
+          prop: "operation",
+        },
       ],
+      data_1: {
+        name: "jack",
+      },
+      params_1: {
+        name: "rose",
+      },
     };
   },
   components: {
-    tianTable: () => import("../components/table/index.vue"),
+    yangButton: () => import("../components/button/index.vue"),
+    yangTable: () => import("../components/table/index.vue"),
   },
-  methods: {},
+  methods: {
+    handleEdit(row) {
+      console.log(row);
+    },
+    handleDelete(row) {
+      console.log(row);
+    },
+    onLoad(data) {
+      console.log(data);
+    },
+    formatData(data) {
+      const tableData = data.data;
+      tableData.forEach((item) => {
+        item.gender = item.gender === "男" ? 1 : 0;
+      });
+      return tableData;
+    },
+  },
 };
 </script>
-<style lang="scss" scoped></style>

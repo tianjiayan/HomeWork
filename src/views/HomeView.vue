@@ -14,6 +14,7 @@
   </div>
 </template>
 <script>
+import yangButton from "@/components/button";
 export default {
   name: "Home",
   data() {
@@ -22,7 +23,7 @@ export default {
     };
   },
   components: {
-    yangButton: () => import("../components/button/index.vue"),
+    yangButton,
   },
   methods: {
     handleSubmit() {

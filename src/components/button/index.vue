@@ -17,7 +17,7 @@
 
 <script>
 export default {
-  name: "index",
+  name: "t-button",
   props: {
     type: {
       type: String,

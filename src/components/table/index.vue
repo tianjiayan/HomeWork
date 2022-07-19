@@ -1,36 +1,22 @@
 <template>
   <div>
-    <el-table :data="tableData" style="width: 100%">
-      <el-table-column
-        v-if="index"
-        label="序号"
-        type="index"
-        width="55"
-      ></el-table-column>
-      <el-table-column
-        v-if="checkbox"
-        type="selection"
-        width="55"
-      ></el-table-column>
-      <template v-for="item in column">
-        <el-table-column
-          v-if="item.type === 'function'"
-          :key="item.prop"
-          :prop="item.prop"
-          :label="item.label"
-          :width="item.width"
-        >
+    <el-table
+      :data="tableData"
+      style="width: 100%">
+      <el-table-column v-if="index" label="序号" type="index" width="55"></el-table-column>
+      <el-table-column v-if="checkbox" type="selection" width="55"></el-table-column>
+      <template v-for="(item,index) in column">
+        <el-table-column v-if="item.type === 'function'"  :key="index" :prop="item.prop" :label="item.label" :width="item.width">
           <template v-slot="scope">
-            <div v-html="item.callback && item.callback(scope.row)"></div>
+            <div v-html="item.callback && item.callback(scope.row,index)"></div>
           </template>
         </el-table-column>
-        <el-table-column
-          v-else
-          :key="item.prop"
-          :prop="item.prop"
-          :label="item.label"
-          :width="item.width"
-        ></el-table-column>
+        <el-table-column v-if="item.type === 'slot'"  :key="index" :prop="item.prop" :label="item.label" :width="item.width">
+          <template v-slot="scope">
+            <slot :name="item.slot_name" :data="scope.row"></slot>
+          </template>
+        </el-table-column>
+        <el-table-column v-else :key="index" :prop="item.prop" :label="item.label" :width="item.width"></el-table-column>
       </template>
     </el-table>
   </div>
@@ -38,46 +24,80 @@
 
 <script>
 export default {
-  name: "Table",
+  name: 'yangTable',
   props: {
     column: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
     checkbox: Boolean,
     index: Boolean,
+    url: {
+      type: String,
+      default: '',
+      required: true
+    },
+    method: {
+      type: String,
+      default: 'GET'
+    },
+    data: {
+      type: Object,
+      default: () => {}
+    },
+    params: {
+      type: Object,
+      default: () => {}
+    },
+    initRequest: Boolean,
+    onLoad: Boolean,
+    format: Function
   },
-  data() {
+  data () {
     return {
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金<div>234234</div>沙江路 1518 弄",
-          sex: "男",
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄",
-          sex: "女",
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄",
-          sex: "男",
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄",
-          sex: "女",
-        },
-      ],
-    };
+      tableData: []
+    }
   },
-};
+  created () {
+    this.initRequest && this.getTableList()
+  },
+  methods: {
+    async getTableList () {
+      if (!this.url) {
+        throw new Error('url is required')
+        return false
+      }
+      try {
+        const requestData = {
+          url: this.url,
+          method: this.method
+        }
+        if (this.data) {
+          requestData.data = this.data
+        }
+
+        if (this.params) {
+          requestData.params = this.params
+        }
+        const response = await this.$axios(requestData)
+        let data = response.data.data
+        if (this.format && typeof this.format === 'function') {
+          data = this.format(response.data)
+        }
+        this.tableData = data
+
+        this.onLoad && this.$emit('onLoad', response.data)
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    handleRequest () {
+      this.getTableList()
+    }
+  }
+}
 </script>
 
-<style scoped></style>
+<style scoped>
+
+</style>
