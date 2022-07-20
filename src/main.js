@@ -5,9 +5,9 @@ import store from "./store";
 import "./styles/scssconfig.scss";
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
-import axios from "./utils/request";
+import request from "./utils/request";
 
-Vue.prototype.$axios = axios;
+Vue.prototype.$axios = request;
 
 Vue.use(ElementUI);
 Vue.config.productionTip = false;
