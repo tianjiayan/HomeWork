@@ -15,38 +15,21 @@ export default {
           prop: "name",
           label: "姓名",
           required: true,
-          // rules: [
-          //   {
-          //     required: true,
-          //     message: '必填'
-          //   }
-          // ]
+          rules: [
+            { min: 3, max: 10, message: "请输入3~10个字符", trigger: "blur" },
+          ],
         },
         {
           type: "select",
           prop: "gender",
           label: "性别",
           required: true,
-          // message: '请输入姓名'
-          // rules: [
-          //   {
-          //     required: true,
-          //     message: '必填'
-          //   }
-          // ]
         },
         {
           type: "input",
           prop: "sex",
           label: "年龄",
           required: true,
-          // message: '请输入年龄'
-          // rules: [
-          //   {
-          //     required: true,
-          //     message: '必填'
-          //   }
-          // ]
         },
       ],
       formField: {

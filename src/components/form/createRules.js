@@ -1,6 +1,6 @@
 const createRules = (data) => {
   data.forEach((item) => {
-    const rulesArray = [];
+    let rulesArray = [];
     if (item.required) {
       const rule = {
         required: true,
@@ -8,6 +8,12 @@ const createRules = (data) => {
       };
       rulesArray.push(rule);
     }
+
+    // 判断是否有额外的校验规则
+    if (item.rules && Array.isArray(item.rules) && item.rules.length > 0) {
+      rulesArray = rulesArray.concat(item.rules);
+    }
+
     item.rules = rulesArray;
   });
   return data;
