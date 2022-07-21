@@ -1,6 +1,10 @@
 <template>
   <div>
-    <yang-form :item="formItem" :field="formField"></yang-form>
+    <yang-form
+      :item="formItem"
+      :field="formField"
+      :rules="formRules"
+    ></yang-form>
   </div>
 </template>
 
@@ -24,6 +28,20 @@ export default {
       formField: {
         name: "",
         gender: "",
+      },
+      formRules: {
+        name: [
+          {
+            required: true,
+            message: "必填",
+          },
+        ],
+        gender: [
+          {
+            required: true,
+            message: "必填",
+          },
+        ],
       },
     };
   },

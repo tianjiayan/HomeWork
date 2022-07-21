@@ -1,11 +1,12 @@
 <template>
   <div class="form-container">
-    <el-form ref="form" :model="form" label-width="80px">
+    <el-form :model="field" ref="form" :rules="rules" label-width="80px">
       <template v-for="item in formItem">
         <el-form-item
           v-if="item.type === 'input'"
           :key="item.label"
           :label="item.label"
+          :prop="item.prop"
         >
           <el-input v-model="field[item.prop]"></el-input>
         </el-form-item>
@@ -13,6 +14,7 @@
           v-if="item.type === 'select'"
           :key="item.label"
           :label="item.label"
+          :prop="item.prop"
         >
           <el-select v-model="field[item.prop]"></el-select>
         </el-form-item>
@@ -30,6 +32,10 @@ export default {
       default: () => [],
     },
     field: {
+      type: Object,
+      default: () => ({}),
+    },
+    rules: {
       type: Object,
       default: () => ({}),
     },
