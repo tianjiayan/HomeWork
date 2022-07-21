@@ -27,6 +27,7 @@ export default {
           prop: "gender",
           label: "性别",
           required: true,
+          // message: '请输入姓名'
           // rules: [
           //   {
           //     required: true,
@@ -39,6 +40,7 @@ export default {
           prop: "sex",
           label: "年龄",
           required: true,
+          // message: '请输入年龄'
           // rules: [
           //   {
           //     required: true,
