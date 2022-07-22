@@ -2,27 +2,22 @@
   <el-form ref="form" :model="field" label-width="80px">
     <template v-for="item in formItem">
       <el-form-item
-        v-if="item.type === 'input'"
         :rules="item.rules"
         :key="item.label"
         :label="item.label"
         :prop="item.prop"
       >
-        <el-input v-model="field[item.prop]"></el-input>
-      </el-form-item>
-      <el-form-item
-        v-if="item.type === 'select'"
-        :rules="item.rules"
-        :key="item.label"
-        :label="item.label"
-        :prop="item.prop"
-      >
-        <el-select v-model="field[item.prop]"></el-select>
+        <component
+          :value="field[item.prop]"
+          :config="item"
+          :is="!item.type ? 'com-text' : `com-${item.type}`"
+        ></component>
       </el-form-item>
     </template>
     <el-form-item>
       <el-button
         @click="handleButton(item)"
+        :loading="item.loading"
         v-for="item in button"
         v-bind="item"
         :key="item.key"
@@ -34,8 +29,18 @@
 
 <script>
 import createRules from "./createRules";
+const modules = {};
+const files = require.context("../control", true, /index.vue$/i);
+files.keys().forEach((item) => {
+  const key = item.split("/");
+  const name = key[1];
+  modules[`com-${name}`] = files(item).default;
+});
 export default {
   name: "yangForm",
+  components: {
+    ...modules,
+  },
   props: {
     item: {
       type: Array,
@@ -53,6 +58,7 @@ export default {
       type: Array,
       default: () => [],
     },
+    beforeSubmit: Function,
   },
   data() {
     return {
@@ -72,6 +78,18 @@ export default {
     handleSubmit(item) {
       this.$refs.form.validate((valid) => {
         if (valid) {
+          if (typeof this.beforeSubmit === "function") {
+            this.$set(item, "loading", true);
+            this.beforeSubmit()
+              .then((response) => {
+                console.log("成功");
+                this.$set(item, "loading", false);
+              })
+              .catch(() => {
+                console.log("失败");
+                this.$set(item, "loading", false);
+              });
+          }
           console.log("表单提交");
         }
       });
